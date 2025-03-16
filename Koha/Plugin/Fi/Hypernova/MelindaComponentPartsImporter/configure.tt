@@ -1,0 +1,178 @@
+[% INCLUDE 'doc-head-open.inc' %]
+ <title>Koha:Melinda Component Parts Importer: Configuration</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+<body>
+[% INCLUDE 'header.inc' %]
+[% INCLUDE 'cat-search.inc' %]
+
+<div id="subheader">
+<nav id="breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="/cgi-bin/koha/mainpage.pl">Home</a></li><li class="breadcrumb-item"><a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a></li><li class="breadcrumb-item">Melinda Component Parts Importer &rsaquo; Configuration</li></ol></nav>
+</div>
+<div class="main container-fluid">
+    <div class="row">
+    <main>
+    <!-- We can access our own plugins resource files using the PLUGIN_PATH variable. -->
+    <h3>Koha: Melinda Component Parts Importer: Configuration</h3>
+
+    <!-- Notice our form here has no 'action', this is good, it means that our forms will always get passed back to 'plugins/run.pl'. You could hard code it instead if you prefer -->
+    <form method="get">
+        <!-- Always pass these two parameters so the plugin system knows what to execute! -->
+        <input type="hidden" name="class" value="[% CLASS %]"/>
+        <input type="hidden" name="method" value="[% METHOD %]"/>
+
+        <fieldset>
+        <label for="pattern">SRU server: </label>
+        <select name="sru_target">
+        [% FOREACH sru_server IN sru_targets %]
+            <option value="[% sru_server.id | html %]" [% IF sru_target.defined && sru_target == sru_server.id %]selected="selected"[% END %]>[% sru_server.servername | html %]</option>
+        [% END %]
+            <option value="melinda_default_sru">Add default Melinda SRU target</option>
+        </select>
+        </fieldset>
+
+        <fieldset>
+        <label for="pattern">Default record matcher: </label>
+        <select name="default_matcher_id">
+            <option value="default_773w">Add new 773$w matcher</option>
+        [% FOREACH available_matching_rule IN available_matching_rules %]
+            <option value="[% available_matching_rule.matcher_id | html %]" [% IF default_matcher_id.defined && default_matcher_id == available_matching_rule.matcher_id %]selected="selected"[% END %]>[% available_matching_rule.code | html %] / [% available_matching_rule.description | html %]</option>
+        [% END %]
+        </select>
+        </fieldset>
+
+        <fieldset>
+        <input type="hidden" name="table_id" value="detail|melindacpi_search_results" />
+        <table>
+            <thead>
+                <tr>
+                    <th>Column name</th>
+                    <th>Is hidden by default</th>
+                    <th>Cannot be toggled</th>
+                </tr>
+            </thead>
+            <tbody>
+                [% FOR column IN table_columns %]
+                    [% SET value = pagename _ '|' _ tablename _ '|' _ column.columnname %]
+                    <tr>
+                        <td>
+                            [% column.columnname | html %]
+                            <input type="hidden" name="columnid" value="[% value | html %]" />
+                        </td>
+                        <td>
+                            [% IF column.is_hidden %]
+                                [% IF column.cannot_be_modified %]
+                                    <input type="checkbox" name="[% value | html %]_hidden" value="1" checked="checked" disabled="disabled" />
+                                    <input type="hidden" name="[% value | html %]_hidden" value="1" />
+                                [% ELSE %]
+                                    <input type="checkbox" name="[% value | html %]_hidden" value="1" checked="checked" />
+                                [% END %]
+                            [% ELSE %]
+                                [% IF column.cannot_be_modified %]
+                                    <input type="checkbox" name="[% value | html %]_hidden" value="1" disabled="disabled" />
+                                    <input type="hidden" name="[% value | html %]_hidden" value="0" />
+                                [% ELSE %]
+                                    <input type="checkbox" name="[% value | html %]_hidden" value="1" />
+                                [% END %]
+                            [% END %]
+                        </td>
+                        <td>
+                            [% IF column.cannot_be_toggled %]
+                                [% IF column.cannot_be_modified %]
+                                    <input type="checkbox" name="[% value | html %]_cannot_be_toggled" value="1" checked="checked" disabled="disabled" />
+                                    <input type="hidden" name="[% value | html %]_cannot_be_toggled" value="1" />
+                                [% ELSE %]
+                                    <input type="checkbox" name="[% value | html %]_cannot_be_toggled" value="1" checked="checked" />
+                                [% END %]
+                            [% ELSE %]
+                                [% IF column.cannot_be_modified %]
+                                    <input type="checkbox" name="[% value | html %]_cannot_be_toggled" value="1" disabled="disabled" />
+                                    <input type="hidden" name="[% value | html %]_cannot_be_toggled" value="0" />
+                                [% ELSE %]
+                                    <input type="checkbox" name="[% value | html %]_cannot_be_toggled" value="1" />
+                                [% END %]
+                            [% END %]
+                        </td>
+                    </tr>
+                [% END %]
+            </tbody>
+        </table>
+        [% SET table_settings = TablesSettings.GetTableSettings( modulename, pagename, tablename ) %]
+        [% IF table_settings.default_display_length %]
+            <p>
+                Default display length:
+                <select name="[% table_id | html %]_default_display_length">
+                    [% IF table_settings.default_display_length == 10 %]
+                        <option value="10" selected="selected">10</option>
+                    [% ELSE %]
+                        <option value="10">10</option>
+                    [% END %]
+                    [% IF table_settings.default_display_length == 20 %]
+                        <option value="20" selected="selected">20</option>
+                    [% ELSE %]
+                        <option value="20">20</option>
+                    [% END %]
+                    [% IF table_settings.default_display_length == 50 %]
+                        <option value="50" selected="selected">50</option>
+                    [% ELSE %]
+                        <option value="50">50</option>
+                    [% END %]
+                    [% IF table_settings.default_display_length == 100 %]
+                        <option value="100" selected="selected">100</option>
+                    [% ELSE %]
+                        <option value="100">100</option>
+                    [% END %]
+                    [% IF table_settings.default_display_length == -1 %]
+                        <option value="-1" selected="selected">All</option>
+                    [% ELSE %]
+                        <option value="-1">All</option>
+                    [% END %]
+                </select>
+            </p>
+        [% END %]
+        [% IF table_settings.default_sort_order.defined %]
+            <p>
+                Default sort order:
+                <select name="[% pagename | html %]|[% tablename | html %]_default_sort_order">
+                    [% FOR column IN tables.$pagename.$tablename.columns %]
+                        [% IF table_settings.default_sort_order == loop.count - 1 %]
+                            <option value="[% loop.count - 1 %]" selected="selected">[% column.columnname | html %]</option>
+                        [% ELSE %]
+                            <option value="[% loop.count - 1 %]">[% column.columnname | html %]</option>
+                        [% END %]
+                    [% END %]
+                </select>
+            </p>
+        [% END %]
+
+        <p>
+            [% SET option_name = pagename _ "|" _ tablename _ "_default_save_state" %]
+            <label for="[% option_name | html %]" title="Save the column visibility, length of the table and order in session">Save configuration state on page change:</label>
+            [%- IF table_settings.default_save_state -%]
+                <input type="checkbox" id="[% option_name | html %]" name="[% option_name | html %]" value="1" checked="checked" />
+            [%- ELSE -%]
+                <input type="checkbox" id="[% option_name | html %]" name="[% option_name | html %]" value="1" />
+            [%- END -%]
+        </p>
+
+        <p>
+            [% SET option_name = pagename _ "|" _ tablename _ "_default_save_state_search" %]
+            <label for="[% option_name | html %]" title="Save the search and filtering in session">Save search state on page change:</label>
+            [%- IF table_settings.default_save_state_search -%]
+                <input type="checkbox" id="[% option_name | html %]" name="[% option_name | html %]" value="1" checked="checked" />
+            [%- ELSE -%]
+                <input type="checkbox" id="[% option_name | html %]" name="[% option_name | html %]" value="1" />
+            [%- END -%]
+        </p>
+        </fieldset>
+        <fieldset>
+        <input type="hidden" name="save" value="1" />
+
+        <input type="submit" value="Save configuration" />
+        </fieldset>
+    </form>
+    </main>
+    </div>
+</div>
+
+[% INCLUDE 'intranet-bottom.inc' %]

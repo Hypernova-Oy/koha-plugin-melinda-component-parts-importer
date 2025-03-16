@@ -1,0 +1,218 @@
+{
+  "/frameworks": {
+    "get": {
+      "x-mojo-to": "Fi::Hypernova::MelindaComponentPartsImporter::Controller#get_frameworks",
+      "operationId": "melinda_get_biblio_frameworks",
+      "tags": ["melinda_component_parts"],
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "200": {
+          "description": "MARC frameworks"
+        },
+        "500": {
+          "description": "Internal server error"
+        }
+      },
+      "x-koha-authorization": {
+        "permissions": {
+          "catalogue": "1"
+        }
+      }
+    }
+  },
+  "/biblio/{biblionumber}/search-component-parts": {
+    "get": {
+      "x-mojo-to": "Fi::Hypernova::MelindaComponentPartsImporter::Controller#search_component_parts",
+      "operationId": "search_melinda_component_parts_by_biblionumber",
+      "tags": ["melinda_component_parts"],
+      "parameters": [
+        {
+          "description": "Biblionumber",
+          "in": "path",
+          "name": "biblionumber",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "description": "Page number",
+          "in": "query",
+          "name": "_page",
+          "required": false,
+          "type": "integer"
+        },
+        {
+          "description": "Results per page",
+          "in": "query",
+          "name": "_per_page",
+          "required": false,
+          "type": "integer"
+        },
+        {
+          "description": "Datatable",
+          "in": "query",
+          "name": "_match",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "description": "Datatable",
+          "in": "query",
+          "name": "_order_by",
+          "required": false,
+          "type": "string"
+        }
+      ],
+      "produces": [
+        "application/json",
+        "application/marcxml+xml",
+        "application/marc-in-json"
+      ],
+      "responses": {
+        "200": {
+          "description": "MARCXML result"
+        },
+        "400": {
+          "description": "Bad request",
+          "schema": {
+              "type": "object",
+                "properties": {
+                  "error": {
+                    "description": "An explanation for the error",
+                    "type": "string"
+                  }
+                }
+          }
+        },
+        "404": {
+          "description": "Record ID not found",
+          "schema": {
+              "type": "object",
+                "properties": {
+                  "error": {
+                    "description": "An explanation for the error",
+                    "type": "string"
+                  }
+                }
+          }
+        },
+        "406": {
+          "description": "Invalid Accept header",
+          "schema": {
+              "type": "array"
+          }
+        },
+        "500": {
+          "description": "Internal server error"
+        },
+        "502": {
+          "description": "Melinda error",
+          "schema": {
+              "type": "object",
+                "properties": {
+                  "error": {
+                    "description": "An explanation for the error",
+                    "type": "string"
+                  }
+                }
+          }
+        }
+      },
+      "x-koha-authorization": {
+        "permissions": {
+          "catalogue": "1"
+        }
+      }
+    }
+  },
+  "/biblio/{biblionumber}/component-parts": {
+    "post": {
+      "x-mojo-to": "Fi::Hypernova::MelindaComponentPartsImporter::Controller#import_component_parts",
+      "operationId": "import_melinda_component_parts_by_biblionumber",
+      "tags": ["melinda_component_parts"],
+      "parameters": [
+        {
+          "description": "Biblionumber",
+          "in": "path",
+          "name": "biblionumber",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "description": "Quick import without manual managing of staged MARC records",
+          "in": "query",
+          "name": "quickimport",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "description": "Quick import with this frameworkcode",
+          "in": "query",
+          "name": "frameworkcode",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "description": "Quick import with this overlay framework",
+          "in": "query",
+          "name": "overlay_framework",
+          "required": false,
+          "type": "string"
+        }
+      ],
+      "produces": [
+        "application/javascript"
+      ],
+      "responses": {
+        "200": {
+          "description": "Success"
+        },
+        "400": {
+          "description": "Bad request",
+          "schema": {
+              "type": "object",
+                "properties": {
+                  "error": {
+                    "description": "An explanation for the error",
+                    "type": "string"
+                  }
+                }
+          }
+        },
+        "404": {
+          "description": "Record ID not found",
+          "schema": {
+              "type": "object",
+                "properties": {
+                  "error": {
+                    "description": "An explanation for the error",
+                    "type": "string"
+                  }
+                }
+          }
+        },
+        "500": {
+          "description": "Internal server error"
+        },
+        "502": {
+          "description": "Melinda error",
+          "schema": {
+              "type": "object",
+                "properties": {
+                  "error": {
+                    "description": "An explanation for the error",
+                    "type": "string"
+                  }
+                }
+          }
+        }
+      },
+      "x-koha-authorization": {
+        "permissions": {
+          "catalogue": "1"
+        }
+      }
+    }
+  }
+}
