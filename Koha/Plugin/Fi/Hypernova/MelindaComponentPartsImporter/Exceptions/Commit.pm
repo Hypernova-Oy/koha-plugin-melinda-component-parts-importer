@@ -27,6 +27,10 @@ use Exception::Class (
         isa         => 'Koha::Plugin::Fi::Hypernova::MelindaComponentPartsImporter::Exceptions::Commit',
         description => 'No staged job was given'
     },
+    'Koha::Plugin::Fi::Hypernova::MelindaComponentPartsImporter::Exceptions::Commit::StagedJobFailed' => {
+        isa         => 'Koha::Plugin::Fi::Hypernova::MelindaComponentPartsImporter::Exceptions::Commit',
+        description => 'Staged job failed'
+    },
 );
 
 =head1 NAME

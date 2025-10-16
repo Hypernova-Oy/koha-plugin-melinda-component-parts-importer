@@ -205,6 +205,19 @@ sub intranet_js {
                                             $("a#importFromMelindaRefresh").show();
                                             $("a#importFromMelindaBatchHref").attr("href", "/cgi-bin/koha/tools/manage-marc-import.pl?import_batch_id="+data_job.data.import_batch_id);
                                             $("button#stage-melinda-button").prop("disabled", false);
+                                        } else if (data_job.status === 'failed') {
+                                            job_finished = true;
+                                            $("div#melindacpi_processing_import").hide();
+                                            $("span#importFromMelindaResultstep2").hide();
+                                            $("div#importFromMelindaResultTable").show();
+                                            $("td#importFromMelindaResultTable_num_added").html(data_job.data.report.num_added);
+                                            $("td#importFromMelindaResultTable_num_ignore").html(data_job.data.report.num_ignored);
+                                            $("td#importFromMelindaResultTable_num_updated").html(data_job.data.report.num_updated);
+                                            $("a#importFromMelindaRefresh").show();
+                                            $("a#importFromMelindaBatchHref").attr("href", "/cgi-bin/koha/tools/manage-marc-import.pl?import_batch_id="+data_job.data.import_batch_id);
+                                            $("button#stage-melinda-button").prop("disabled", false);
+                                            alert("Failed! See console log.");
+                                            console.log(data_job);
                                         }
                                     },
                                     error: function(data_job){
@@ -343,6 +356,18 @@ sub intranet_js {
                                             $("a#importFromMelindaResultHref").attr("href", "/cgi-bin/koha/admin/background_jobs.pl?op=view&id="+data.job_id);
                                             $("a#importFromMelindaResultHref").hide(); // let's just hide the status button
                                             $("button#stage-melinda-button").prop("disabled", false);
+                                        } else if (data_job.status === 'failed') {
+                                            job_finished = true;
+                                            $("div#melindacpi_processing_import").hide();
+                                            $("span#importFromMelindaResult").hide();
+                                            $("span#importFromMelindaResultForStage").show();
+                                            $("a#importFromMelindaManageMARC").show();
+                                            $("a#importFromMelindaManageMARC").attr("href", "/cgi-bin/koha/tools/manage-marc-import.pl?import_batch_id="+data_job.data.report.import_batch_id);
+                                            $("a#importFromMelindaResultHref").attr("href", "/cgi-bin/koha/admin/background_jobs.pl?op=view&id="+data.job_id);
+                                            $("a#importFromMelindaResultHref").hide(); // let's just hide the status button
+                                            $("button#stage-melinda-button").prop("disabled", false);
+                                            alert("Failed! See console log.");
+                                            console.log(data_job);
                                         }
                                     },
                                     error: function(data_job){
@@ -568,7 +593,7 @@ sub commit_staged_marc_records {
     for ( my $i = 0 ; $i < ( $params->{'timeout'} // 60 ) ; $i++ ) {
         $staged_job = Koha::BackgroundJobs->find($stage_job_id);
 
-        if ( $staged_job->status ne 'finished' ) {
+        if ( $staged_job->status ne 'finished' && $staged_job->status ne 'failed' ) {
             sleep 1;
         } else {
             last;
@@ -578,6 +603,10 @@ sub commit_staged_marc_records {
     Koha::Plugin::Fi::Hypernova::MelindaComponentPartsImporter::Exceptions::Commit::NoStagedJob->throw(
         'Staged job not found')
         unless $staged_job;
+
+    Koha::Plugin::Fi::Hypernova::MelindaComponentPartsImporter::Exceptions::Commit::StagedJobFailed->throw(
+        'Staged job failed')
+       if $staged_job->status eq 'failed';
 
     my $staged_data     = decode_json( $staged_job->data );
     my $import_batch_id = $staged_data->{'report'}->{'import_batch_id'};
