@@ -44,7 +44,7 @@ use Koha::Z3950Servers;
 use Koha::Plugin::Fi::Hypernova::MelindaComponentPartsImporter::Exceptions::Commit;
 use Koha::Plugin::Fi::Hypernova::MelindaComponentPartsImporter::Exceptions::SRUServer;
 
-our $VERSION = "24.11.01.0";
+our $VERSION = "24.11.01.1";
 
 our $metadata = {
     name            => 'Melinda Component Parts Importer',
