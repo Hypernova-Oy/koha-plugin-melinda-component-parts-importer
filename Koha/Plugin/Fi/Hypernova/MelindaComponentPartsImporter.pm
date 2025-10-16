@@ -19,6 +19,7 @@ use Modern::Perl;
 
 use base qw(Koha::Plugins::Base);
 
+use Encode;
 use File::Basename;
 use MARC::File::XML;
 use MARC::Record;
@@ -837,7 +838,7 @@ sub _build_marcxml_results {
     }
     $contents .= MARC::File::XML::footer();
 
-    return $contents;
+    return Encode::encode_utf8($contents);
 }
 
 sub _build_mij_results {
