@@ -24,7 +24,6 @@ use File::Basename;
 use MARC::File::XML;
 use MARC::Record;
 use Mojo::JSON qw(decode_json);
-use YAML;
 use Try::Tiny;
 
 use C4::Breeding;
