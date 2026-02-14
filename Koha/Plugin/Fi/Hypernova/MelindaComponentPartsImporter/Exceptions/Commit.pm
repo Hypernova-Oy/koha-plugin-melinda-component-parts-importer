@@ -24,11 +24,11 @@ use Exception::Class (
         isa => 'Koha::Exception',
     },
     'Koha::Plugin::Fi::Hypernova::MelindaComponentPartsImporter::Exceptions::Commit::NoStagedJob' => {
-        isa         => 'Koha::Plugin::Fi::Hypernova::MelindaComponentPartsImporter::Exceptions::Commit',
+        isa         => 'Koha::Exception',
         description => 'No staged job was given'
     },
     'Koha::Plugin::Fi::Hypernova::MelindaComponentPartsImporter::Exceptions::Commit::StagedJobFailed' => {
-        isa         => 'Koha::Plugin::Fi::Hypernova::MelindaComponentPartsImporter::Exceptions::Commit',
+        isa         => 'Koha::Exception',
         description => 'Staged job failed'
     },
 );

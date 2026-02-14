@@ -22,7 +22,7 @@
       }
     }
   },
-  "/biblio/{biblionumber}/search-component-parts": {
+  "/biblio/search-component-parts": {
     "get": {
       "x-mojo-to": "Fi::Hypernova::MelindaComponentPartsImporter::Controller#search_component_parts",
       "operationId": "search_melinda_component_parts_by_biblionumber",
@@ -30,9 +30,23 @@
       "parameters": [
         {
           "description": "Biblionumber",
-          "in": "path",
+          "in": "query",
           "name": "biblionumber",
-          "required": true,
+          "required": false,
+          "type": "string"
+        },
+        {
+          "description": "Melinda host record id",
+          "in": "query",
+          "name": "host_record_id",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "description": "Koha import_records.import_record_id",
+          "in": "query",
+          "name": "import_record_id",
+          "required": false,
           "type": "string"
         },
         {
@@ -126,7 +140,7 @@
       }
     }
   },
-  "/biblio/{biblionumber}/component-parts": {
+  "/biblio/component-parts": {
     "post": {
       "x-mojo-to": "Fi::Hypernova::MelindaComponentPartsImporter::Controller#import_component_parts",
       "operationId": "import_melinda_component_parts_by_biblionumber",
@@ -134,9 +148,23 @@
       "parameters": [
         {
           "description": "Biblionumber",
-          "in": "path",
+          "in": "query",
           "name": "biblionumber",
-          "required": true,
+          "required": false,
+          "type": "string"
+        },
+        {
+          "description": "Melinda host record id",
+          "in": "query",
+          "name": "host_record_id",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "description": "Koha import_records.import_record_id",
+          "in": "query",
+          "name": "import_record_id",
+          "required": false,
           "type": "string"
         },
         {

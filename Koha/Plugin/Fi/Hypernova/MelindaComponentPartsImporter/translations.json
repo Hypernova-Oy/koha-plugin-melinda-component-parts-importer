@@ -1,0 +1,95 @@
+{
+    "button_check_job_status": {
+        "default": "Check job status",
+        "fi-FI": "Tarkista taustatyön tila"
+    },
+    "button_close": {
+        "default": "Close",
+        "fi-FI": "Sulje"
+    },
+    "button_finish": {
+        "default": "Finish (refresh page)",
+        "fi-FI": "Valmis (päivittää sivun)"
+    },
+    "button_manage_staged_records": {
+        "default": "Manage staged MARC records",
+        "fi-FI": "Hallinnoi välivarastoituja MARC-tietueita"
+    },
+    "completed_import": {
+        "default": "Completed import of component records",
+        "fi-FI": "Osakohteiden tuonti on valmis"
+    },
+    "failed_see_console_log": {
+        "default": "Failed! See developer tools console log",
+        "fi-FI": "Virhe! Katso selaimen kehittäjätuokalujen konsolilokia"
+    },
+    "fetch_components_from_melinda": {
+        "default": "Fetch component parts from Melinda",
+        "fi-FI": "Hae osakohteet Melindasta"
+    },
+    "framework_default": {
+        "default": "Default",
+        "fi-FI": "Oletus"
+    },
+    "koha_will_import": {
+        "default": "Koha will import component parts in a background job. This may take a moment. Please wait...",
+        "fi-FI": "Koha tuo osakohteet taustatyössä. Tässä kestää hetki. Ole hyvä ja odota..."
+    },
+    "koha_will_index": {
+        "default": "Koha will now index records in the background.",
+        "fi-FI": "Koha indeksoi nyt tietueet taustatyönä."
+    },
+    "melinda_component_records": {
+        "default": "Melinda Component Records",
+        "fi-FI": "Melindan osakohteet"
+    },
+    "melinda_search": {
+        "default": "Melinda Search",
+        "fi-FI": "Melinda haku"
+    },
+    "importing_records_failed": {
+        "default": "Importing component records failed.",
+        "fi-FI": "Osakohteiden tuonti epäonnistui."
+    },
+    "import_with_cr": {
+        "default": "Import with component records<br>using components framework",
+        "fi-FI": "Tuo tietue ja osakohteet<br>käyttäen osakohteille kuvailupohjaa"
+    },
+    "manage_imported_batch": {
+        "default": "Manage imported batch",
+        "fi-FI": "Hallinnoi erätuontia"
+    },
+    "no_records_added": {
+        "default": "Number of records added",
+        "fi-FI": "Lisättyjen tietueiden lkm"
+    },
+    "no_records_ignored": {
+        "default": "Number of records ignored",
+        "fi-FI": "Ohitettujen tietueiden lkm"
+    },
+    "no_records_updated": {
+        "default": "Number of records updated",
+        "fi-FI": "Päivitettyjen tietueiden lkm"
+    },
+    "preparing_records": {
+        "default": "Preparing records",
+        "fi-FI": "Valmistellaan tietueita"
+    },
+    "quick_import": {
+        "default": "Quick import",
+        "fi-FI": "Pikatuonti"
+    },
+    "records_can_be_imported": {
+        "default": "Records can now be imported using the Manage staged MARC records tool.",
+        "fi-FI": "Tietueet voi nyt tuoda 'Hallinnoi välivarastoituja tietueita' -kuvailutyökalulla"
+    },
+    "records_have_been_staged": {
+        "default": "Records have been staged",
+        "fi-FI": "Tietueet on välivarastoitu"
+    },
+    "stage_records": {
+        "default": "Stage records for import",
+        "fi-FI": "Välivarastoi MARC-tietueet"
+    }
+    
+}

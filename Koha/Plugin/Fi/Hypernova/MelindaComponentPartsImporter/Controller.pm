@@ -42,14 +42,46 @@ sub search_component_parts {
     return try {
         my ( $per_page, $page ) = $c->build_query_pagination( $c->req->params->to_hash );
 
-        my $host_record_id;
-        my $biblionumber = $c->validation->param('biblionumber');
-        my $biblio       = Koha::Biblios->find($biblionumber);
+        my $host_record_id   = $c->validation->param('host_record_id');
+        my $import_record_id = $c->validation->param('import_record_id');
+        my $biblionumber     = $c->validation->param('biblionumber');
+        my $host_record_xml;
 
-        if ($biblio) {
-            $host_record_id = $biblio->metadata->record->field('001')->data;
+        if ($host_record_id) {
+
+            # use host record id
+        } elsif ($import_record_id) {
+            my $import_record = Koha::Import::Records->find($import_record_id);
+            return $c->render( status => 404, openapi => { error => 'Import record not found' } ) unless $import_record;
+            $host_record_xml = $import_record->get_marc_record();
+            return $c->render( status => 404, openapi => { error => 'Import record MARCXML not found' } )
+                unless $host_record_xml;
+            return $c->render( status => 404, openapi => { error => 'Import record field 001 not found' } )
+                unless $host_record_xml->field('001');
+            $host_record_id = $host_record_xml->field('001')->data;
+        } elsif ($biblionumber) {
+            my $biblio = Koha::Biblios->find($biblionumber);
+            return $c->render( status => 404, openapi => { error => 'Biblio not found' } ) unless $biblio;
+            my $host_record_xml = $biblio->metadata->record;
+            return $c->render( status => 404, openapi => { error => 'Biblio metadata record not found' } )
+                unless $host_record_xml;
+            return $c->render( status => 404, openapi => { error => 'Biblio metadata field 001 not found' } )
+                unless $host_record_xml->field('001');
+            $host_record_id = $host_record_xml->field('001')->data;
         } else {
-            return $c->render( status => 404, openapi => { error => 'Biblio not found' } );
+            return $c->render(
+                status  => 400,
+                openapi => { error => 'Either host_record_id, import_record_id or biblionumber parameter is required' }
+            );
+        }
+
+        # if record is already a component record, skip it
+        if ( $host_record_xml && $host_record_xml->subfield( '773', 'w' ) ) {
+            return $c->render(
+                status  => 400,
+                openapi =>
+                    { error => 'This is a component record. Will not search component records for a component record' }
+            );
         }
 
         my $melindacpi = Koha::Plugin::Fi::Hypernova::MelindaComponentPartsImporter->new;
@@ -123,14 +155,46 @@ sub import_component_parts {
     my $c = shift->openapi->valid_input or return;
 
     return try {
-        my $host_record_id;
-        my $biblionumber = $c->validation->param('biblionumber');
-        my $biblio       = Koha::Biblios->find($biblionumber);
+        my $host_record_id   = $c->validation->param('host_record_id');
+        my $import_record_id = $c->validation->param('import_record_id');
+        my $biblionumber     = $c->validation->param('biblionumber');
+        my $host_record_xml;
 
-        if ($biblio) {
-            $host_record_id = $biblio->metadata->record->field('001')->data;
+        if ($host_record_id) {
+
+            # use host record id
+        } elsif ($import_record_id) {
+            my $import_record = Koha::Import::Records->find($import_record_id);
+            return $c->render( status => 404, openapi => { error => 'Import record not found' } ) unless $import_record;
+            $host_record_xml = $import_record->get_marc_record();
+            return $c->render( status => 404, openapi => { error => 'Import record MARCXML not found' } )
+                unless $host_record_xml;
+            return $c->render( status => 404, openapi => { error => 'Import record field 001 not found' } )
+                unless $host_record_xml->field('001');
+            $host_record_id = $host_record_xml->field('001')->data;
+        } elsif ($biblionumber) {
+            my $biblio = Koha::Biblios->find($biblionumber);
+            return $c->render( status => 404, openapi => { error => 'Biblio not found' } ) unless $biblio;
+            my $host_record_xml = $biblio->metadata->record;
+            return $c->render( status => 404, openapi => { error => 'Biblio metadata record not found' } )
+                unless $host_record_xml;
+            return $c->render( status => 404, openapi => { error => 'Biblio metadata field 001 not found' } )
+                unless $host_record_xml->field('001');
+            $host_record_id = $host_record_xml->field('001')->data;
         } else {
-            return $c->render( status => 404, openapi => { error => 'Biblio not found' } );
+            return $c->render(
+                status  => 400,
+                openapi => { error => 'Either host_record_id, import_record_id or biblionumber parameter is required' }
+            );
+        }
+
+        # if record is already a component record, skip it
+        if ( $host_record_xml && $host_record_xml->subfield( '773', 'w' ) ) {
+            return $c->render(
+                status  => 400,
+                openapi =>
+                    { error => 'This is a component record. Will not search component records for a component record' }
+            );
         }
 
         my $melindacpi = Koha::Plugin::Fi::Hypernova::MelindaComponentPartsImporter->new;
