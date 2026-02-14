@@ -8,6 +8,12 @@ melinda.partsofhost search index.
 
 ## How it looks
 
+### Z39.50/SRU import
+
+Import component part records together with the host record
+
+https://github.com/user-attachments/assets/9062e844-1e94-4abd-80ff-4d0e8204b064
+
 ### Quick import
 
 Quick import using selected MARC framework and the default matcher configured
